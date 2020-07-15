@@ -10,7 +10,7 @@
 
 	<name>ruoyi</name>
 	<url>http://www.ruoyi.vip</url>
-	<description>若依管理系统</description>
+	<description>homexManage</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -180,7 +180,16 @@
 			    </exclusion>
 			</exclusions>
 		</dependency>
-		
+		<dependency><!-- 实时调式   线上发布时 关闭给jar  -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency><!-- 集成工具类 -->
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+			<version>4.3.1</version>
+		</dependency>
 		<!--防止进入swagger页面报类型转换错误，排除2.9.2中的引用，手动增加1.5.21版本-->
         <dependency>
             <groupId>io.swagger</groupId>

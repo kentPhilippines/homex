@@ -3,6 +3,7 @@ package com.ruoyi.project.system.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -40,7 +41,8 @@ import com.ruoyi.project.system.service.ISysUserService;
  */
 @RestController
 @RequestMapping("/system/user")
-
+@Api( tags="关于用户操作的类",
+        value="关于用户操作的类")
 public class SysUserController extends BaseController {
     @Autowired
     private ISysUserService userService;
@@ -59,26 +61,49 @@ public class SysUserController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
-    @ApiOperation(value="获取用户列表", notes="获取每个用户的详细信息，并根据传递参数做模糊查询或精确查询")
-    public TableDataInfo list(SysUser user) {
+    @ApiOperation(value="获取用户列表",
+            notes="获取每个用户的详细信息，并根据传递参数做模糊查询或精确查询",
+            response = AjaxResult.class,
+            httpMethod= "GET"
+    )
+  /*  @ApiImplicitParams({
+            @ApiImplicitParam(name="userId",value="用户序号",required=true,paramType="form"),
+            @ApiImplicitParam(name="userName",value="登录名称",required=true,paramType="form"),
+            @ApiImplicitParam(name="nickName",value="用户昵称",required=true,paramType="form"),
+            @ApiImplicitParam(name="email",value="用户邮箱",required=true,paramType="form"),
+            @ApiImplicitParam(name="phonenumber",value="手机号码",required=true,paramType="form"),
+            @ApiImplicitParam(name="nickName",value="用户昵称",required=true,paramType="form"),
+            @ApiImplicitParam(name="nickName",value="用户昵称",required=true,paramType="form")
+    })*/
+    public TableDataInfo list(  @ApiParam(value = "模糊查询用户参数信息", required = true) SysUser user) {
         startPage();
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
     }
 
-    @Log(title = "用户管理", businessType = BusinessType.EXPORT)
+    @Log(title = "用户数据导出", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @GetMapping("/export")
-    public AjaxResult export(SysUser user) {
+    @ApiOperation(value="用户数据导出",
+            notes="该接口操作用户权限 ： system:user:export",
+            response = AjaxResult.class,
+            httpMethod= "GET"
+    )
+    public AjaxResult export(@ApiParam(value = "模糊查询用户参数信息导出", required = true) SysUser user) {
         List<SysUser> list = userService.selectUserList(user);
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         return util.exportExcel(list, "用户数据");
     }
 
-    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
+    @Log(title = "用户数据导入", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:user:import')")
     @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
+    @ApiOperation(value="用户数据导入",
+            notes="该接口操作用户权限 ： system:user:import",
+            response = AjaxResult.class,
+            httpMethod= "POST"
+    )
+    public AjaxResult importData(@ApiParam(value = "模糊查询用户参数信息导出", required = true)  MultipartFile file, boolean updateSupport) throws Exception {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         List<SysUser> userList = util.importExcel(file.getInputStream());
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
@@ -98,6 +123,15 @@ public class SysUserController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
     @GetMapping(value = {"/", "/{userId}"})
+    @ApiOperation(
+            value="获取单个用户信息,根据用户的数据ID",
+            notes="该接口操作用户权限 ： system:user:query",
+            response = AjaxResult.class,
+            httpMethod= "POST"
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId",value="用户序号",required=true,paramType="path"),
+    })
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId) {
         AjaxResult ajax = AjaxResult.success();
         List<SysRole> roles = roleService.selectRoleAll();
@@ -116,8 +150,20 @@ public class SysUserController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:add')")
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
+    @ApiOperation(
+            value="新增用户",
+            notes="该接口操作用户权限 ： system:user:add ",
+            response = AjaxResult.class,
+            httpMethod= "POST"
+    )
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysUser user) {
+    public AjaxResult add(
+            @Validated
+            @RequestBody
+            @ApiParam(value = "新增用户参数信息", required = true)
+            SysUser user
+
+    ) {
         if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName()))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
         } else if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
@@ -134,9 +180,19 @@ public class SysUserController extends BaseController {
      * 修改用户
      */
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
-    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
+    @Log(title = "修改用户", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysUser user) {
+    @ApiOperation(
+            value="修改用户",
+            notes="该接口操作用户权限 ： system:user:edit",
+            response = AjaxResult.class,
+            httpMethod= "PUT"
+    )
+    public AjaxResult edit(
+            @Validated
+            @RequestBody
+            @ApiParam(value = "修改用户参数信息", required = true)
+                    SysUser user) {
         userService.checkUserAllowed(user);
         if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");

@@ -2,6 +2,7 @@ package com.ruoyi.project.system.controller;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -31,7 +32,6 @@ import com.ruoyi.project.system.service.ISysConfigService;
  */
 @RestController
 @RequestMapping("/system/config")
-@ApiModel(value="参数配置 信息操作处理",description="请求参数类" )
 public class SysConfigController extends BaseController {
     @Autowired
     private ISysConfigService configService;
@@ -41,7 +41,7 @@ public class SysConfigController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:config:list')")
     @GetMapping("/list")
-    @ApiOperation(value = "获取参数配置列表", httpMethod = "GET",re)
+    @ApiOperation(value = "获取参数配置列表", httpMethod = "GET",response = TableDataInfo.class)
     public TableDataInfo list(SysConfig config) {
         startPage();
         List<SysConfig> list = configService.selectConfigList(config);

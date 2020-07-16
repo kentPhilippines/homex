@@ -1,24 +1,31 @@
 package com.ruoyi.framework.security;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 用户登录对象
  *
  * @author ruoyi
  */
+@ApiModel(value="用户登录对象",description="用户登录对象")
 public class LoginBody {
     /**
      * 用户名
      */
+    @ApiModelProperty(example = "用户名")
     private String username;
 
     /**
      * 用户密码
      */
+    @ApiModelProperty(example = "用户密码")
     private String password;
 
     /**
      * 验证码
      */
+    @ApiModelProperty(example = "验证码")
     private String code;
 
     /**

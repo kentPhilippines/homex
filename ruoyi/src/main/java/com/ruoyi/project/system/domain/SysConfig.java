@@ -3,6 +3,7 @@ package com.ruoyi.project.system.domain;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -15,6 +16,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
  *
  * @author ruoyi
  */
+@ApiModel(value="参数配置表",description="参数配置表")
 public class SysConfig extends BaseEntity {
     private static final long serialVersionUID = 1L;
 

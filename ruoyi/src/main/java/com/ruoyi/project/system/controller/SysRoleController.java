@@ -1,6 +1,9 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.List;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +31,7 @@ import com.ruoyi.project.system.service.ISysRoleService;
  * 
  * @author ruoyi
  */
+@Api(tags = "用户角色")
 @RestController
 @RequestMapping("/system/role")
 public class SysRoleController extends BaseController
@@ -35,6 +39,7 @@ public class SysRoleController extends BaseController
     @Autowired
     private ISysRoleService roleService;
 
+    @ApiOperation(value = "查询用户角色列表接口")
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysRole role)
@@ -43,6 +48,7 @@ public class SysRoleController extends BaseController
         List<SysRole> list = roleService.selectRoleList(role);
         return getDataTable(list);
     }
+
 
     @Log(title = "角色管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:role:export')")
@@ -67,6 +73,7 @@ public class SysRoleController extends BaseController
     /**
      * 新增角色
      */
+    @ApiOperation(value = "新增角色接口")
     @PreAuthorize("@ss.hasPermi('system:role:add')")
     @Log(title = "角色管理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -88,6 +95,7 @@ public class SysRoleController extends BaseController
     /**
      * 修改保存角色
      */
+    @ApiOperation(value = "修改角色")
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -121,6 +129,7 @@ public class SysRoleController extends BaseController
     /**
      * 状态修改
      */
+    @ApiOperation(value = "修改角色状态")
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
@@ -134,6 +143,7 @@ public class SysRoleController extends BaseController
     /**
      * 删除角色
      */
+    @ApiOperation(value = "删除角色")
     @PreAuthorize("@ss.hasPermi('system:role:remove')")
     @Log(title = "角色管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{roleIds}")

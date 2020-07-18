@@ -23,7 +23,7 @@ public class SysRole extends BaseEntity {
     /**
      * 角色ID
      */
-    @ApiModelProperty(example = "角色ID")
+    @ApiModelProperty(value = "角色ID", example = "角色ID")
     @Excel(name = "角色序号", cellType = ColumnType.NUMERIC)
     private Long roleId;
 
